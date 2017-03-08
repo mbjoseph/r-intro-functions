@@ -1,0 +1,242 @@
+---
+title: "Defining and using functions in R"
+subtitle: https://github.com/mbjoseph/r-intro-functions
+author: "Max Joseph"
+date: "3/8/2017"
+output:
+  beamer_presentation:
+    keep_tex: true
+    fonttheme: "structurebold"
+    fig_caption: false
+    highlight: pygments
+header-includes: 
+- \beamertemplatenavigationsymbolsempty
+- \definecolor{foreground}{RGB}{0,0,0}
+- \definecolor{background}{RGB}{255,255,255}
+- \definecolor{title}{RGB}{0,120,255}
+- \definecolor{gray}{RGB}{155,155,155}
+- \definecolor{subtitle}{RGB}{204,0,0}
+- \definecolor{hilight}{RGB}{102,255,204}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamercolor{titlelike}{fg=title}
+- \setbeamercolor{subtitle}{fg=subtitle}
+- \setbeamercolor{institute}{fg=gray}
+- \setbeamercolor{normal text}{fg=foreground,bg=background}
+- \setbeamercolor{local structure}{fg=title}
+- \setbeamertemplate{frametitle}{\begin{centering} \insertframetitle \par \end{centering}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 4.2, fig.height = 4)
+```
+
+# 
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Function_machine2.svg/1200px-Function_machine2.svg.png)
+
+# A simple function
+
+```{r}
+c(1, 2, 3, 4, 5)
+```
+
+# Functions are objects too!
+
+```{r}
+c
+```
+
+# Primitive functions
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Homo_neanderthalensis.jpg/1200px-Homo_neanderthalensis.jpg)
+
+# Functions written in R
+
+```{r}
+sd
+```
+
+
+# Example: temperature conversion
+
+```{r}
+x <- 30
+y <- ((x - 32) * (5 / 9)) + 273.15
+y
+```
+
+# Example: temperature conversion
+
+```{r}
+fahr_to_kelvin <- function(fahr) {
+  kelvin <- ((fahr - 32) * (5 / 9)) + 273.15
+  kelvin
+}
+
+fahr_to_kelvin(30)
+```
+
+# 
+
+![](anatomy.pdf)
+
+# 
+
+    There are only two hard things in Computer Science: 
+      cache invalidation and naming things.
+
+    -- Phil Karlton
+    
+# What's in a (function) name?
+
+```
+f()
+my_func()
+t_funk()
+f2k()
+convert_temperature()
+fahr_to_kelvin()
+```
+
+# Body 
+
+What your function **does**
+
+```{r}
+fahr_to_kelvin <- function(fahr) {
+  kelvin <- ((fahr - 32) * (5 / 9)) + 273.15
+  kelvin
+}
+```
+
+# 3 weird tricks to a great function body your physician doesn't want you to know!
+
+1. Express intent 
+2. Be nice to humans
+3. Self-contain your functions
+
+# 
+
+1. Express your intent with meaningful names
+
+```{r}
+fahr_to_kelvin <- function(fahr) {
+  kelvin <- ((fahr - 32) * (5 / 9)) + 273.15
+  kelvin
+}
+```
+
+not
+
+```{r}
+fahr_to_kelvin <- function(x) {
+  y <- ((x - 32) * (5 / 9)) + 273.15
+  y
+}
+```
+
+
+# 
+
+2. Document what the function does for human readers
+
+```{r}
+fahr_to_kelvin <- function(fahr) {
+  # Convert temperature in fahrenheight to kelvin
+  # args: fahr (numeric) - temp. in fahrenheight
+  # returns: kelvin (numeric) - temp. in kelvin
+  kelvin <- ((fahr - 32) * (5 / 9)) + 273.15
+  kelvin
+}
+```
+
+# 
+
+3. Make your functions self-contained
+
+```{r}
+offset <- 273.15
+
+fahr_to_kelvin <- function(fahr) {
+  # Convert temperature in fahrenheight to kelvin
+  # args: fahr (numeric) - temp. in fahrenheight
+  # returns: kelvin (numeric) - temp. in kelvin
+  kelvin <- ((fahr - 32) * (5 / 9)) + offset
+  kelvin
+}
+```
+
+**^Bad**
+
+# Environments
+
+R associates each object with an **Environment**
+
+By default, objects $\rightarrow$ **Global environment**
+
+(demo)
+
+# Function environments
+
+```{r}
+fahr_to_kelvin <- function(fahr) {
+  kelvin <- ((fahr - 32) * (5 / 9)) + 273.15
+  kelvin
+}
+
+fahr_to_kelvin(fahr = 100)
+```
+
+```{r, eval = FALSE}
+kelvin
+```
+
+    ## Error: object 'kelvin' not found
+
+# Self-contained functions
+
+1. Act like functions
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Function_machine2.svg/1200px-Function_machine2.svg.png)
+
+# Self-contained functions 
+
+2. Are robust to the state of the global environment
+
+```{r}
+offset <- 273.15
+
+fahr_to_kelvin <- function(fahr) {
+  # Convert temperature in fahrenheight to kelvin
+  # args: fahr (numeric) - temp. in fahrenheight
+  # returns: kelvin (numeric) - temp. in kelvin
+  kelvin <- ((fahr - 32) * (5 / 9)) + offset
+  kelvin
+}
+```
+
+
+# Review
+
+Function parts:
+
+- name
+- arguments
+- body
+
+Best practices:
+
+- use a good name
+- document your function
+- contain your function
+
+# But wait, there's more!
+
+We haven't covered the **why** and **when** yet.
+
+Short version: 
+
+- DRY (do not repeat yourself)
+- modularity
+- ease of maintenance
+
